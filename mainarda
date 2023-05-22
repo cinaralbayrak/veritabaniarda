@@ -1,0 +1,85 @@
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+
+//import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+//import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RadioButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class MainActivity extends AppCompatActivity {
+
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Txt_Ad=(EditText)findViewById(R.id.txtİsim);
+        Txt_Soyad=(EditText)findViewById(R.id.txtSoyisim);
+        Txt_Maas=(EditText)findViewById(R.id.txtMaas);
+        Txt_Telefon=(EditText)findViewById(R.id.txtTelefon);
+        Rdb_Erkek=(RadioButton) findViewById(R.id.rdb_Erkek);
+        Rdb_Kadın=(RadioButton) findViewById(R.id.rdb_Kadın);
+
+        Btn_Ekle=(Button)findViewById(R.id.btnKaydet);
+        Btn_Liste=(Button)findViewById(R.id.btnListele);
+        Btn_Sil=(Button)findViewById(R.id.btnSil);
+        listView=(ListView)findViewById(R.id.veriler);
+
+    }
+
+    String Cinsiyet="";
+    Button Btn_Ekle,Btn_Liste,Btn_Sil;
+    EditText Txt_Ad,Txt_Soyad,Txt_Maas,Txt_Telefon;
+    ListView listView;
+    RadioButton Rdb_Erkek,Rdb_Kadın;
+
+    veritabani veritabani=new veritabani(MainActivity.this);
+
+    public void BtnEkle_onClick(View v) {
+        veritabani.veriEkle(Txt_Ad.getText().toString(),Txt_Soyad.getText().toString(),Integer.parseInt(Txt_Maas.getText().toString()),
+                Txt_Telefon.getText().toString(),Cinsiyet);
+        if (Rdb_Erkek.isChecked()){
+            Cinsiyet="Erkek";
+        }
+        else if (Rdb_Kadın.isChecked()){
+            Cinsiyet="Kadın";
+        }
+        goster();
+    }
+    public void BtnListe_onClick(View v) {
+        goster();
+    }
+
+    void goster (){
+        List<String> Veriler =veritabani.veriListele();
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>
+                (MainActivity.this,android.R.layout.activity_list_item,android.R.id.text1,Veriler);
+        listView.setAdapter(adapter);
+    }
+
+    void temizle (){
+        List<String> temizle =new ArrayList();
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>
+                (MainActivity.this,android.R.layout.activity_list_item,android.R.id.text1,temizle);
+        listView.setAdapter(adapter);
+    }
+    public void BtnSil_onClick(View v) {
+        veritabani.veriSil(Txt_Ad.getText().toString());
+        goster();
+    }
+}
+
+
